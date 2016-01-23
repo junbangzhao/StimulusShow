@@ -23,11 +23,13 @@ public:
 private slots:
     //void on_pushButton_clicked();
     void timerUpdate();
+    void targetShow();
 
 private:
     Ui::SingleReaction *ui;
     int id1,id2;
-    QTimer *timer;
+    QTimer *timer_fix,*timer_target;
+
 };
 
 #endif // SINGLEREACTION_H

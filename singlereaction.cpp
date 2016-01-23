@@ -4,6 +4,7 @@
 #include "qapplication.h"
 #include "QPainter"
 #include "QtDebug"
+#include "vector"
 
 
 SingleReaction::SingleReaction(QWidget *parent) :
@@ -13,14 +14,22 @@ SingleReaction::SingleReaction(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint|Qt::MaximizeUsingFullscreenGeometryHint);
     //setCursor(Qt::BlankCursor);
-    timer = new QTimer(this);
+    timer_fix = new QTimer(this);
+    timer_target = new QTimer(this);
     //connect(timer,SIGNAL(timeout()),this,SLOT(timerUpdate()));
     //timer->start(88);
+    ui->label->move(width()/2-ui->label->width()/2,height()/2-ui->label->height()/2);
     ui->label->hide();
     ui->pushButton->hide();
-    ui->line_H->setGeometry(100,200,21,1);
-    //ui->line_V->setGeometry(frameSize().width()/2,frameSize().height()/2,11,1);
-    qDebug() <<frameSize().width();
+    ui->line_H->resize(21,1);
+    ui->line_V->resize(1,21);
+    ui->line_H->move(width()/2-ui->line_H->width()/2,height()/2-ui->line_H->height()/2);
+    ui->line_V->move(width()/2-ui->line_V->width()/2,height()/2-ui->line_V->height()/2);
+    ui->line_H->hide();
+    ui->line_V->hide();
+
+    vector<int> vecTarget;
+    for (int i = 0; i < 10; i++)
 
 
 }
@@ -40,8 +49,8 @@ void SingleReaction::keyPressEvent(QKeyEvent *event)
         close();
         break;
     case Qt::Key_Enter:
-        connect(timer,SIGNAL(timeout()),this,SLOT(timerUpdate()));
-        timer->start(500);
+        connect(timer_fix,SIGNAL(timeout()),this,SLOT(timerUpdate()));
+        timer_fix->start(500);
         break;
     }
 }
@@ -74,6 +83,19 @@ void SingleReaction::timerEvent(QTimerEvent *)
 
 void SingleReaction::timerUpdate()
 {
+
+    ui->line_H->show();
+    ui->line_V->show();
+    timer_fix->stop();
+
+    timer_target->start(1000);
+    connect(timer_target,SIGNAL(timeout()),this,SLOT(targetShow()));
+}
+
+void SingleReaction::targetShow()
+{
+    ui->line_H->hide();
+    ui->line_V->hide();
     ui->label->show();
-    timer->stop();
+    timer_target->stop();
 }
